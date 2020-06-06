@@ -33,6 +33,9 @@ function generatePalette() {
   return arr;
 }
 function populateChart(data) {
+  console.log(data);
+  console.log(new Date().setDate(new Date().getDate()));
+
   let durations = duration(data);
   let kgs = calculateTotalWeight(data);
   let workouts = workoutNames(data);
@@ -41,20 +44,12 @@ function populateChart(data) {
   let line = document.querySelector("#canvas").getContext("2d");
   let bar = document.querySelector("#canvas2").getContext("2d");
   let pie = document.querySelector("#canvas3").getContext("2d");
-  let pie2 = document.querySelector("#canvas4").getContext("2d");
+  let donut = document.querySelector("#canvas4").getContext("2d");
 
   let lineChart = new Chart(line, {
     type: "line",
     data: {
-      labels: [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ],
+      labels: getDayLabels(),
       datasets: [
         {
           label: "Workout Duration In Minutes",
@@ -94,15 +89,7 @@ function populateChart(data) {
   let barChart = new Chart(bar, {
     type: "bar",
     data: {
-      labels: [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ],
+      labels: getDayLabels(),
       datasets: [
         {
           label: "Kilograms",
@@ -164,7 +151,7 @@ function populateChart(data) {
     },
   });
 
-  let donutChart = new Chart(pie2, {
+  let donutChart = new Chart(donut, {
     type: "doughnut",
     data: {
       labels: workouts,
@@ -219,4 +206,14 @@ function workoutNames(data) {
   });
 
   return workouts;
+}
+
+function getDayLabels() {
+  var baseDate = new Date();
+  var weekDays = [];
+  for (i = 0; i < 7; i++) {
+    weekDays.unshift(baseDate.toLocaleDateString("en-AU", { weekday: "long" }));
+    baseDate.setDate(baseDate.getDate() - 1);
+  }
+  return weekDays;
 }
